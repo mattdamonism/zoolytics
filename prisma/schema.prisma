@@ -1,0 +1,95 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model collection {
+    id                  Int     @id @default(autoincrement())
+    address             String  @unique
+    collectionName      String?
+    description         String?
+    logoImageHash       String?
+    siteUrl             String?
+    discord             String?
+    twitterHandle       String?
+    mediumHandle        String?
+    telegram            String?
+    isVerified          Boolean?
+    isVisible           Boolean?
+    isInternal          Boolean?
+    isOwnerble          Boolean?
+    categories          String?
+    symbol              String?
+    name                String?
+    attributes          collectionAttribute[]
+}
+
+model collectionAttribute {
+    id              Int         @id @default(autoincrement())
+    id2             String
+    collection      collection  @relation(fields: [collectionId], references: [id])
+    collectionId    Int
+    isNumeric       Boolean
+    value           value[]
+}
+
+model value {
+    id              Int                     @id @default(autoincrement())
+    attribute       collectionAttribute     @relation(fields: [attributeId], references: [id])
+    attributeId     Int
+    count           Int?
+    value           String?
+    min             Decimal?
+    max             Decimal?
+}
+
+model token {
+    id                  Int         @id @default(autoincrement())
+    contentType         String
+    contractAddress     String
+    imageURL            String
+    isAppropriate       Boolean
+    isAuction           Boolean
+    lastSalePrice       Decimal
+    LastSalePriceInUSD  Decimal
+    liked               Int
+    name                String
+    owner               String
+    ownerAlias          String
+    paymentToken        String
+    price               Decimal
+    priceInUSD          Decimal
+    supply              Int
+    thumbnailPath       String
+    tokenID             Int
+    tokenType           Int
+    tokenURI            String
+    id2                 String
+    tokenInfo           tokenInfo?
+}
+
+model tokenInfo {
+    id              Int         @id @default(autoincrement())
+    token           token       @relation(fields: [tokenId], references: [id])
+    tokenId         Int         @unique
+    image           String
+    animation_url   String
+    description     String
+    attributes      tokenAttribute[]
+}
+
+model tokenAttribute {
+    id              Int         @id @default(autoincrement())
+    token           tokenInfo   @relation(fields: [tokenInfoId], references: [id])
+    tokenInfoId     Int
+    trait_type      String
+    value           String
+    display_type    String
+}
